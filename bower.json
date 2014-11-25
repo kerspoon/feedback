@@ -1,0 +1,21 @@
+{
+  "name": "feedback",
+  "version": "0.0.0",
+  "authors": [
+    "James Brooks <kerspoon@gmail.com>"
+  ],
+  "main": "index.html",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "nvd3": "~1.1.15-beta",
+    "moment": "~2.8.3"
+  }
+}
