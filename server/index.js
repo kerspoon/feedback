@@ -49,7 +49,7 @@ app.use(function(req, res, next){
   if (startsWith(req.path, '/api/')) {
     next();
   } else {
-    console.log(clientDir + '/index.html');
+    console.log('---', req.path);
     res.sendfile(clientDir + '/index.html');
   }
 });
