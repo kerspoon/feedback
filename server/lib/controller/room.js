@@ -27,4 +27,5 @@ exports.delete = function(id, callback) {
 
 exports.message = function(msgObj, callback) {
   io.sendMessage(msgObj.id, msgObj.message);
+  callback();
 };
