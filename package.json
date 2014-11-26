@@ -1,25 +1,16 @@
 {
-  "name": "express-rest",
+  "name": "workshop-feedback",
   "version": "0.0.0",
-  "description": "a tutorial for restful express with minimal boilerplate",
-  "main": "main.js",
+  "description": "feedback app for lectures",
+  "main": "server/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/kerspoon/express-rest.git"
-  },
-  "keywords": [
-    "express",
-    "REST"
-  ],
   "author": "James Brooks",
-  "license": "BSD-2-Clause",
-  "bugs": {
-    "url": "https://github.com/kerspoon/express-rest/issues"
-  },
   "dependencies": {
-    "express": "~4.1.1"
+    "body-parser": "^1.9.3",
+    "express": "^4.1.2",
+    "helmet": "^0.5.2",
+    "underscore": "^1.7.0"
   }
 }

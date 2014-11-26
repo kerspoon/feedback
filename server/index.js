@@ -12,6 +12,10 @@ var app = express();
 
 app.use(helmet());
 
+app.use(function(req, res, next) {
+  console.log("->", req.method, req.path);
+  next();
+});
 
 app.use('/', express.static(__dirname + '/../client'));
 app.use('/bower_components', express.static(__dirname + '/../bower_components'));
