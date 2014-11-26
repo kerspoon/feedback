@@ -4,14 +4,17 @@
 var roomController = require('./controller/room');
 
 
-exports.sendMessage = function(roomId, message) {
+exports.sendMessage = function(roomId, message, callback) {
   roomController.get(roomId, function(err, roomObj) {
-    if (!err && roomObj && roomObj.socket) {
-      roomObj.socket.emit('message', message);
-      return true;
+    if (!err) {
+      if (roomObj && roomObj.socket) {
+        roomObj.socket.emit('message', message);
+        return callback(null);
+      } else {
+        return callback(new Error('cannot get owner for room'));
+      }
     } else {
-      console.log('ERR: cannot get owner for room');
-      return false;
+      return callback(err);
     }
   });
 };
