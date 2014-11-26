@@ -39,8 +39,43 @@
     xhr.send();
   }
 
+  function jsonPost(url, data, callback) {
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', '/api/v1/' + url, true);
+    xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState === 4) {
+        // everything is good, the response is received
+        if (xhr.status >= 200 && xhr.status < 400) {
+          // Success!
+          var obj;
+          try {
+            obj = JSON.parse(xhr.responseText);
+          } catch(e) {
+            return callback(true);
+          }
+          return callback(null, obj);
+        } else {
+          // We reached our target server, but it returned an error
+          return callback(true);
+        }
+      }
+    };
+
+    var str;
+    try {
+      str = JSON.stringify(data);
+    } catch(e) {
+      return callback(true);
+    }
+
+    xhr.send(str);
+  }
+
   exports.randomString = randomString;
   exports.pad = pad;
   exports.xhrFile = xhrFile;
+  exports.jsonPost = jsonPost;
 
 }(window));

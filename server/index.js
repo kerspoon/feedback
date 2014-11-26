@@ -6,9 +6,11 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var helmet = require('helmet');
 var routes = require('./lib/routes');
+var path = require('path');
 
 var errorCount = 0;
 var app = express();
+var clientDir = path.resolve(__dirname + '/../client');
 
 app.use(helmet());
 
@@ -17,7 +19,7 @@ app.use(function(req, res, next) {
   next();
 });
 
-app.use('/', express.static(__dirname + '/../client'));
+app.use('/', express.static(clientDir));
 app.use('/bower_components', express.static(__dirname + '/../bower_components'));
 
 
@@ -38,8 +40,25 @@ function startsWith(string, start) {
 
 
 /*
+  for page.js return index.html for anything not found.
+  this means it will treat `/join` to serve index.html which makes
+  the single page app work.
+  https://github.com/visionmedia/page.js/blob/master/examples/index.js
+*/
+app.use(function(req, res, next){
+  if (startsWith(req.path, '/api/')) {
+    next();
+  } else {
+    console.log(clientDir + '/index.html');
+    res.sendfile(clientDir + '/index.html');
+  }
+});
+
+
+/*
   as this is the last normal route in the list it gets called if there are no
   other routes defined. Hence we can use this as the 404 handler.
+  http://stackoverflow.com/questions/6528876
 */
 app.use(function(req, res, next){
 
@@ -50,9 +69,8 @@ app.use(function(req, res, next){
     console.log("----------");
     res.json(404, {msg: 'route not found'});
   } else {
-    res.redirect('/');
+    res.status(404).sendfile(clientDir + '/404.html');
   }
-
 });
 
 
@@ -81,6 +99,8 @@ app.use(function(err, req, res, next) {
 
   console.log(err.stack);
   console.log("----------");
+
+  // TODO if path.startsWith '/api/' res.render(error.html { message: ...})
 
   res.json(err.status || 500, {
     msg: err.clientMessage || 'An error has occurred',
