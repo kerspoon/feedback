@@ -5,17 +5,15 @@ var roomController = require('./controller/room');
 
 
 exports.sendMessage = function(roomId, message) {
-
-  var socket = roomController.getOwner(roomId);
-
-  if (socket) {
-    socket.emit('message', message);
-    return true;
-  } else {
-    console.log('ERR: cannot get owner for room');
-    return false;
-  }
-
+  roomController.get(roomId, function(err, roomObj) {
+    if (!err && roomObj && roomObj.socket) {
+      roomObj.socket.emit('message', message);
+      return true;
+    } else {
+      console.log('ERR: cannot get owner for room');
+      return false;
+    }
+  });
 };
 
 exports.init = function(http) {
@@ -35,7 +33,7 @@ exports.init = function(http) {
       // set room owner so we can message them later.
       roomController.create({
         id: roomId,
-        owner: socket
+        socket: socket
       }, function(err) {
         if (err) {
           socket.emit('error', err.clientMessage || 'An error has occurred');

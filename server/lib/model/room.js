@@ -30,7 +30,7 @@ exports.get = function(id, callback) {
 exports.update = function(id, obj, callback) {
   if (rooms[id]) {
     _.extend(rooms[id], obj);
-    return callback(null, rooms[id]);
+    return callback(null);
   } else {
     return callback(new WebError(404, 'not found'));
   }

@@ -44,6 +44,11 @@ exports.init = function(app) {
     .get(function(req, res, next) {
       roomController.get(req.params.id, makeGenericCallback(res, next));
     })
+    // update
+    .post(function(req, res, next) {
+      req.body.id = req.params.id;
+      roomController.message(req.body, makeGenericCallback(res, next));
+    })
     // delete
     .delete(function(req, res, next) {
       roomController.delete(res.locals.id, makeGenericCallback(res, next));

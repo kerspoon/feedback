@@ -3,6 +3,7 @@
 
 var _ = require('underscore');
 var roomModel = require('../model/room');
+var io = require('../io');
 
 exports.getAll = function(callback) {
   return roomModel.getAll(callback);
@@ -22,4 +23,8 @@ exports.update = function(obj, callback) {
 
 exports.delete = function(id, callback) {
   return roomModel.delete(id, callback);
+};
+
+exports.message = function(msgObj, callback) {
+  io.sendMessage(msgObj.id, msgObj.message);
 };

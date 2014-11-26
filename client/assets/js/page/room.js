@@ -8,10 +8,11 @@
   var roomId;
 
   function onMessage() {
-    // go to the room
-    var message = ractive.get('message');
 
-    jsonPost('/room/' + roomId, {
+    //var message = ractive.get('message');
+    var message = 'hello dave';
+
+    jsonPost('room/' + roomId, {
       message: message
     }, function(err) {
       if (err) {
@@ -34,7 +35,15 @@
 
     // set up event handlers
     var listener = ractive.on({
-      send: onMessage
+      sendMessage: onMessage
+    });
+
+    jsonPost('room/' + roomId, {
+      message: 'joined'
+    }, function(err) {
+      if (err) {
+        alert('failed to send message');
+      }
     });
 
   };

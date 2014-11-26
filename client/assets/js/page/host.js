@@ -25,7 +25,7 @@
     }
   }
 
-  function onMessage() {
+  function onMessage(message) {
     messages.push(message);
   }
 
