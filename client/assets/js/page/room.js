@@ -6,11 +6,11 @@
   exports.room = room;
 
   var roomId;
+  var ractive;
 
   function onMessage() {
 
-    //var message = ractive.get('message');
-    var message = 'hello dave';
+    var message = ractive.get('message');
 
     jsonPost('room/' + roomId, {
       message: message
@@ -28,7 +28,7 @@
 
     roomId = context.params.id;
 
-    var ractive = templates.moveToPage('room', {
+    ractive = templates.moveToPage('room', {
       roomId: roomId
     });
     templates.setTopNav('Welcome to class', true);
