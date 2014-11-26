@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>Ratchet template page</title>
+    <title>Workshop Feedback</title>
 
     <meta name="viewport" content="initial-scale=1, maximum-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -14,34 +14,24 @@
   </head>
   <body>
 
-    <header class="bar bar-nav">
+    <header class="bar bar-nav top-navigation">
       <h1 class="title">Workshop Feedback</h1>
     </header>
 
     <div class="content">
-      <p class="content-padded">
-        This is the workshop feedback app.
-      </p>
-      <div class="card">
-        <ul class="table-view">
-          <li class="table-view-cell">
-            <div class="push-right js-page-host" >
-              <strong>Create Room</strong>
-            </div>
-          </li>
-          <li class="table-view-cell">
-            <div class="push-right js-page-join">
-              <strong>Join Room</strong>
-            </div>
-          </li>
-        </ul>
-      </div>
+      <h1 class="content-padded">Loading...</h1>
     </div>
 
     <script src='http://cdn.ractivejs.org/latest/ractive.min.js'></script>
     <script src="bower_components/underscore/underscore.js"></script>
     <script src="bower_components/async/lib/async.js"></script>
     <script src="bower_components/moment/moment.js"></script>
+    <script src="bower_components/page.js/page.js"></script>
+    <script src="assets/js/util.js"></script>
+    <script src="assets/js/page/host.js"></script>
+    <script src="assets/js/page/index.js"></script>
+    <script src="assets/js/page/join.js"></script>
+    <script src="assets/js/templates.js"></script>
     <script src="assets/js/main.js"></script>
 
   </body>

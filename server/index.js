@@ -32,16 +32,27 @@ app.use(bodyParser.json());
 routes.init(app);
 
 
+function startsWith(string, start) {
+  return string.lastIndexOf(start, 0) === 0;
+}
+
+
 /*
   as this is the last normal route in the list it gets called if there are no
   other routes defined. Hence we can use this as the 404 handler.
 */
 app.use(function(req, res, next){
-  console.log("----------");
-  console.log("route not found");
-  console.log(req.method, req.path);
-  console.log("----------");
-  res.json(404, {msg: 'route not found'});
+
+  if (startsWith(req.path, '/api/')) {
+    console.log("----------");
+    console.log("route not found");
+    console.log(req.method, req.path);
+    console.log("----------");
+    res.json(404, {msg: 'route not found'});
+  } else {
+    res.redirect('/');
+  }
+
 });
 
 
