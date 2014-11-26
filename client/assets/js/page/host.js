@@ -5,6 +5,9 @@
   var host = {};
   exports.host = host;
 
+  var messages = [
+    'Welcome to your room. Students messages will appear here.'
+  ];
 
   /*
    * The duration between two `Date` objects, e.g. 00:14
@@ -22,38 +25,50 @@
     }
   }
 
+  function onMessage() {
+    messages.push(message);
+  }
+
+  function onCreated(roomId) {
+
+    // start the timer
+    var start = new Date();
+
+    // show the new page
+    var ractive = templates.moveToPage('host', {
+      roomId: roomId,
+      timer: '00:00',
+      messages: messages
+    });
+
+    // set the header
+    templates.setTopNav('Host a Class', true);
+
+    // every second update the timer
+    setInterval(function() {
+      ractive.set('timer', getDurationString(start, new Date()));
+    }, 1000);
+  }
+
 
   host.init = function() {
 
     // make up a room ID
     var roomId = randomString(4);
 
-    // go create the room on the server
-    jsonPost('room', {id: roomId}, function(err) {
+    // start a socket.io connection
+    var socket = io();
 
-      if (err) {
-        alert('failed to create room');
-        throw new Error();
-      }
+    socket.on('created', onCreated);
+    socket.on('message', onMessage);
 
-      // start the timer
-      var start = new Date();
-
-      // show the new page
-      var ractive = templates.moveToPage('host', {
-        roomId: roomId,
-        timer: '00:00'
-      });
-
-      // set the header
-      templates.setTopNav('Host a Class', true);
-
-      // every second update the timer
-      setInterval(function() {
-        ractive.set('timer', getDurationString(start, new Date()));
-      }, 1000);
-
+    socket.on('error', function(err) {
+      alert('failed to create room. ' + err);
     });
+
+    // go create the room on the server
+    socket.emit('create', roomId);
+
   };
 
 

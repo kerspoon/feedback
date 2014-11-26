@@ -6,4 +6,10 @@
   Room ID: <span class="roomID--value">{{roomId}}</span>
 </div>
 
-<button class="btn btn-positive btn-block">Leave</button>
+<form>
+  <div class="input-row">
+    <label>Comment</label>
+    <input type="text" value='{{message}}'>
+  </div>
+  <button class="btn btn-positive btn-block" on-tap='send'>Send</button>
+</form>

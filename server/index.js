@@ -6,10 +6,15 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var helmet = require('helmet');
 var routes = require('./lib/routes');
+var io = require('./lib/io');
 var path = require('path');
 
-var errorCount = 0;
 var app = express();
+var http = require('http').Server(app);
+
+io.init(http);
+
+var errorCount = 0;
 var clientDir = path.resolve(__dirname + '/../client');
 
 app.use(helmet());
@@ -38,6 +43,15 @@ function startsWith(string, start) {
   return string.lastIndexOf(start, 0) === 0;
 }
 
+function stringContains(string, search) {
+  return string.indexOf(search) > -1;
+}
+
+function isFilePath(path) {
+  var parts = path.split('/');
+  return stringContains(parts[parts.length-1], '.');
+}
+
 
 /*
   for page.js return index.html for anything not found.
@@ -46,7 +60,7 @@ function startsWith(string, start) {
   https://github.com/visionmedia/page.js/blob/master/examples/index.js
 */
 app.use(function(req, res, next){
-  if (startsWith(req.path, '/api/')) {
+  if (startsWith(req.path, '/api/') || isFilePath(req.path)) {
     next();
   } else {
     console.log('---', req.path);
@@ -109,6 +123,6 @@ app.use(function(err, req, res, next) {
 
 });
 
-
-app.listen(3000);
-console.log('ready', new Date());
+http.listen(3000, function(){
+  console.log('listening on *:3000', new Date());
+});

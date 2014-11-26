@@ -7,8 +7,12 @@
   <span class="timer--time">{{timer}}</span>
 </div>
 
-<div class="content-padded graph">
-  <svg class="graph-svg js-graph"></svg>
+<div class="content-padded messages">
+  <ul>
+  {{#each messages}}
+    <li>{{this}}</li>
+  {{/each}}
+  </ul>
 </div>
 
 <div class="bar bar-standard bar-footer">
