@@ -1,13 +1,17 @@
-(function(exports) {
+(function (exports) {
   'use strict';
   /* jshint browser:true */
 
   var templates = {};
   exports.templates = templates;
 
-
+  /**
+   * Download a template and add it to the store.
+   * @param {string} name - name of the template file
+   * @param {function} callback - function to call when done.
+   */
   function fetchTemplate(name, callback) {
-    xhrFile(name, function(err, template) {
+    xhrFile(name, function (err, template) {
       if (!err) {
         templates[name] = template;
       }
@@ -16,12 +20,12 @@
   }
 
 
-  templates.init = function(names, callback) {
+  templates.init = function (names, callback) {
     async.mapSeries(names, fetchTemplate, callback);
   };
 
 
-  templates.moveToPage = function(templateName, data) {
+  templates.moveToPage = function (templateName, data) {
     return new Ractive({
       el: '.content',
       template: templates[templateName],
@@ -30,7 +34,7 @@
   };
 
 
-  templates.setTopNav = function(title, hasBackButton) {
+  templates.setTopNav = function (title, hasBackButton) {
     return new Ractive({
       el: '.top-navigation',
       template: templates.nav,
@@ -40,5 +44,5 @@
       }
     });
   };
-
+  
 }(window));

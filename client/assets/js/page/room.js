@@ -1,7 +1,7 @@
-(function(exports) {
+(function (exports) {
   'use strict';
   /* jshint browser:true */
-  /* global jsonPost:false, templates:false, page:false */
+  /* global _:false, jsonPost:false, templates:false, page:false */
 
   var room = {};
   exports.room = room;
@@ -20,7 +20,7 @@
 
     jsonPost('room/' + roomId, {
       message: message
-    }, function(err) {
+    }, function (err) {
       if (err) {
         alert('failed to send message');
       } else {
@@ -57,20 +57,20 @@
       sendConfused: onConfused
     });
 
-    ractive.observe( 'happiness', function ( newValue ) {
+    ractive.observe('happiness', function (newValue) {
       _.throttle(_.partial(onHappinessChanged, newValue), 100);
     });
 
     templates.setTopNav('Welcome to class', true);
   }
 
-  room.init = function(context) {
+  room.init = function (context) {
 
     roomId = context.params.id;
 
     jsonPost('room/' + roomId, {
       message: 'joined'
-    }, function(err) {
+    }, function (err) {
       if (err) {
         alert('failed to join room', err);
         page('/join');

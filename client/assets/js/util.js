@@ -1,11 +1,12 @@
-(function(exports) {
+(function (exports) {
   'use strict';
   /* jshint browser:true */
 
   function randomString(len, charSet) {
     charSet = charSet || 'abcdefghijklmnopqrstuvwxyz0123456789';
     var ret = '';
-    for (var i = 0; i < len; i++) {
+    var i;
+    for (i = 0; i < len; i++) {
       var randomPoz = Math.floor(Math.random() * charSet.length);
       ret += charSet.substring(randomPoz, randomPoz + 1);
     }
@@ -23,7 +24,7 @@
     var xhr = new XMLHttpRequest();
     xhr.open('GET', '/templates/' + name + '.handlebars', true);
 
-    xhr.onreadystatechange = function() {
+    xhr.onreadystatechange = function () {
       if (xhr.readyState === 4) {
         // everything is good, the response is received
         if (xhr.status >= 200 && xhr.status < 400) {
@@ -44,7 +45,7 @@
     xhr.open('POST', '/api/v1/' + url, true);
     xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
 
-    xhr.onreadystatechange = function() {
+    xhr.onreadystatechange = function () {
       if (xhr.readyState === 4) {
         // everything is good, the response is received
         if (xhr.status >= 200 && xhr.status < 400) {
@@ -52,7 +53,7 @@
           var obj;
           try {
             obj = JSON.parse(xhr.responseText);
-          } catch(e) {
+          } catch (e) {
             return callback(true);
           }
           return callback(null, obj);
@@ -66,7 +67,7 @@
     var str;
     try {
       str = JSON.stringify(data);
-    } catch(e) {
+    } catch (e) {
       return callback(true);
     }
 

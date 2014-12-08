@@ -1,12 +1,14 @@
-(function(exports) {
+
+(function (exports) {
   'use strict';
+  /* global templates:false, page:false, index:false, join:false, room:false */
   /* jshint browser:true */
 
-  window.addEventListener('load', function() {
+  window.addEventListener('load', function () {
 
     var tmplArr = ['room', 'index', 'host', 'join', 'nav'];
 
-    templates.init(tmplArr, function(err, results) {
+    templates.init(tmplArr, function (err, results) {
       if (err) {
         alert('error loading templates ' + err);
       } else {
