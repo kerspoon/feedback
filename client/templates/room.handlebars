@@ -8,8 +8,17 @@
 
 <form>
   <div class="input-row">
+    <label>Happiness</label>
+    <input type="range" min="0" max="100" value="{{happiness}}" />
+  </div>
+</form>
+
+<button class="btn btn-block" on-tap='sendConfused'>Confused</button>
+
+<form>
+  <div class="input-row">
     <label>Comment</label>
     <input type="text" value='{{message}}'>
   </div>
-  <button class="btn btn-positive btn-block" on-tap='sendMessage'>Send</button>
+  <button class="btn btn-block" on-tap='sendMessage'>Send</button>
 </form>

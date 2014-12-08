@@ -1,6 +1,7 @@
 (function(exports) {
   'use strict';
   /* jshint browser:true */
+  /* global jsonPost:false, templates:false, page:false */
 
   var room = {};
   exports.room = room;
@@ -26,6 +27,19 @@
     return false;
   }
 
+  function onConfused() {
+    console.log('onConfused');
+    // prevent default handler
+    return false;
+  }
+
+  function onHappinessChanged(happiness) {
+    console.log('onHappinessChanged', happiness);
+
+    // prevent default handler
+    return false;
+  }
+
 
   function onJoined(roomId) {
     ractive = templates.moveToPage('room', {
@@ -33,8 +47,13 @@
     });
 
     // set up event handlers
-    var listener = ractive.on({
-      sendMessage: onMessage
+    ractive.on({
+      sendMessage: onMessage,
+      sendConfused: onConfused
+    });
+
+    ractive.observe( 'happiness', function ( newValue ) {
+      _.throttle(_.partial(onHappinessChanged, newValue), 100);
     });
 
     templates.setTopNav('Welcome to class', true);
