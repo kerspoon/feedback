@@ -1,6 +1,7 @@
 (function (exports) {
   'use strict';
   /* jshint browser:true */
+  /* global xhrFile:false, async:false, Ractive:false */
 
   var templates = {};
   exports.templates = templates;

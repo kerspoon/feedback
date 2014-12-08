@@ -7,6 +7,9 @@
 
   var messages = [];
   var start;
+  var users = {};
+  var ractive;
+  var RECENT_THRESHOLD = 30*1000;
 
 
   /*
@@ -25,11 +28,70 @@
     }
   }
 
-  function onMessage(message) {
+  function onChat(message) {
     var now = getDurationString(start, new Date());
     messages.unshift(now + ' - ' + message);
     if (messages.length > 20) {
       messages.pop();
+    }
+  }
+
+  function onConfused(userId) {
+    if (!users[userId]) {
+      users[userId] = {};
+    }
+
+    var now = new Date();
+
+    users[userId].confused = now;
+
+    // find out how many users have been confused in the last 30 sec.
+    var total = _.reduce(users, function(sum, el) {
+      if (el.confused && now - el.confused < RECENT_THRESHOLD ) {
+        return sum + 1;
+      }
+      return sum;
+    }, 0);
+
+    onChat('recently confused users is ' + total + '.');
+    ractive.set('confusion', total);
+  }
+
+  function onHappinessChanged(userId, happiness) {
+    if (!users[userId]) {
+      users[userId] = {};
+    }
+
+    users[userId].happiness = happiness;
+
+    // calculate the average happiness.
+    // it's not going to be perfect. People might have put it really low then
+    // refreshed their browser or logged in twice, it's close enough.
+
+    var length = 0;
+    var total = _.reduce(users, function(sum, el) {
+      if (el.happiness >=0 && el.happiness <= 100) {
+        length++;
+        return sum + el.happiness;
+      }
+      return sum;
+    }, 0);
+
+    var average = total / length;
+
+    onChat('average happiness is now ' + average + '%');
+    ractive.set('happiness', average);
+  }
+
+  function onMessage(message) {
+    if (message.type === 'chat') {
+      onChat(message.message);
+    } else if (message.type === 'confused') {
+      onConfused(message.userId);
+    } else if (message.type === 'happiness') {
+      onHappinessChanged(message.userId, message.message);
+    } else {
+      alert('unknown message type ' + message);
     }
   }
 
@@ -39,7 +101,7 @@
     start = new Date();
 
     // show the new page
-    var ractive = templates.moveToPage('host', {
+    ractive = templates.moveToPage('host', {
       roomId: roomId,
       timer: '00:00',
       messages: messages
@@ -48,7 +110,7 @@
     // set the header
     templates.setTopNav('Host a Class', true);
 
-    onMessage('Welcome to your room. Students messages will appear here.');
+    onChat('Welcome to your room. Students messages will appear here.');
 
     // every second update the timer
     setInterval(function() {
