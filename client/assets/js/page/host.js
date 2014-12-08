@@ -8,6 +8,8 @@
   var messages = [];
   var start;
   var users = {};
+  var ractive;
+  var RECENT_THRESHOLD = 30*1000;
 
 
   /*
@@ -35,13 +37,24 @@
   }
 
   function onConfused(userId) {
-    onChat(userId + ' is confused');
+    if (!users[userId]) {
+      users[userId] = {};
+    }
 
-    users[userId].confused = new Date();
+    var now = new Date();
+
+    users[userId].confused = now;
 
     // find out how many users have been confused in the last 30 sec.
+    var total = _.reduce(users, function(sum, el) {
+      if (el.confused && now - el.confused < RECENT_THRESHOLD ) {
+        return sum + 1;
+      }
+      return sum;
+    }, 0);
 
-
+    onChat('recently confused users is ' + total + '.');
+    ractive.set('confusion', total);
   }
 
   function onHappinessChanged(userId, happiness) {
@@ -88,7 +101,7 @@
     start = new Date();
 
     // show the new page
-    var ractive = templates.moveToPage('host', {
+    ractive = templates.moveToPage('host', {
       roomId: roomId,
       timer: '00:00',
       messages: messages
