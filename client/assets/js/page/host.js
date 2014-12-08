@@ -25,11 +25,31 @@
     }
   }
 
-  function onMessage(message) {
+  function onChat(message) {
     var now = getDurationString(start, new Date());
     messages.unshift(now + ' - ' + message);
     if (messages.length > 20) {
       messages.pop();
+    }
+  }
+
+  function onConfused(userId) {
+    onChat(userId + ' is confused');
+  }
+
+  function onHappinessChanged(userId, happiness) {
+    onChat(userId + ' is now ' + happiness + ' happy.');
+  }
+
+  function onMessage(message) {
+    if (message.type === 'chat') {
+      onChat(message.message);
+    } else if (message.type === 'confused') {
+      onConfused(message.userId);
+    } else if (message.type === 'happiness') {
+      onHappinessChanged(message.userId, message.message);
+    } else {
+      alert('unknown message type ' + message);
     }
   }
 
@@ -48,7 +68,7 @@
     // set the header
     templates.setTopNav('Host a Class', true);
 
-    onMessage('Welcome to your room. Students messages will appear here.');
+    onChat('Welcome to your room. Students messages will appear here.');
 
     // every second update the timer
     setInterval(function() {

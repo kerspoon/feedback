@@ -8,10 +8,13 @@
 
   var roomId;
   var ractive;
+  var userId;
 
-  function sendMessage(message, callback) {
+  function sendMessage(type, message, callback) {
     jsonPost('room/' + roomId, {
-      message: message
+      userId: userId,
+      message: message,
+      type: type
     }, callback);
   }
 
@@ -24,7 +27,7 @@
       return false;
     }
 
-    sendMessage(message, function(err) {
+    sendMessage('chat', message, function(err) {
       if (err) {
         alert('failed to send message');
       } else {
@@ -37,7 +40,7 @@
   }
 
   function onConfused() {
-    sendMessage('*confused*', function(err) {
+    sendMessage('confused', '', function(err) {
       if (err) {
         alert('failed to send message');
       }
@@ -47,16 +50,13 @@
   }
 
   function onHappinessChanged(happiness) {
-    if (!happiness) {
-      return false;
+    if (happiness >=0 && happiness <= 100) {
+      sendMessage('happiness', happiness, function(err) {
+        if (err) {
+          alert('failed to send message');
+        }
+      });
     }
-
-    // we might need to send some form of user ID too.
-    sendMessage('*happiness* ' + happiness, function(err) {
-      if (err) {
-        alert('failed to send message');
-      }
-    });
 
     // prevent default handler
     return false;
@@ -75,7 +75,7 @@
     });
 
     // don't spam the world by sending messages, only send the new value.
-    ractive.observe('happiness', _.debounce(onHappinessChanged, 300));
+    ractive.observe('happiness', _.debounce(onHappinessChanged, 1000));
 
     templates.setTopNav('Welcome to class', true);
   }
@@ -83,6 +83,7 @@
   room.init = function(context) {
 
     roomId = context.params.id;
+    userId = randomString(10);
 
     jsonPost('room/' + roomId, {
       message: 'joined'
