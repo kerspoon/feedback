@@ -13,6 +13,11 @@
 
     var message = ractive.get('message');
 
+    // don't send empty messages
+    if (message.trim().length === 0) {
+      return false;
+    }
+
     jsonPost('room/' + roomId, {
       message: message
     }, function(err) {
