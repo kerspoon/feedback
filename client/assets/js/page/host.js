@@ -5,9 +5,9 @@
   var host = {};
   exports.host = host;
 
-  var messages = [
-    'Welcome to your room. Students messages will appear here.'
-  ];
+  var messages = [];
+  var start;
+
 
   /*
    * The duration between two `Date` objects, e.g. 00:14
@@ -26,13 +26,17 @@
   }
 
   function onMessage(message) {
-    messages.push(message);
+    var now = getDurationString(start, new Date());
+    messages.unshift(now + ' - ' + message);
+    if (messages.length > 20) {
+      messages.pop();
+    }
   }
 
   function onCreated(roomId) {
 
     // start the timer
-    var start = new Date();
+    start = new Date();
 
     // show the new page
     var ractive = templates.moveToPage('host', {
@@ -43,6 +47,8 @@
 
     // set the header
     templates.setTopNav('Host a Class', true);
+
+    onMessage('Welcome to your room. Students messages will appear here.');
 
     // every second update the timer
     setInterval(function() {
