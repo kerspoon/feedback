@@ -7,6 +7,7 @@
 
   var messages = [];
   var start;
+  var users = {};
 
 
   /*
@@ -35,10 +36,38 @@
 
   function onConfused(userId) {
     onChat(userId + ' is confused');
+
+    users[userId].confused = new Date();
+
+    // find out how many users have been confused in the last 30 sec.
+
+
   }
 
   function onHappinessChanged(userId, happiness) {
-    onChat(userId + ' is now ' + happiness + ' happy.');
+    if (!users[userId]) {
+      users[userId] = {};
+    }
+
+    users[userId].happiness = happiness;
+
+    // calculate the average happiness.
+    // it's not going to be perfect. People might have put it really low then
+    // refreshed their browser or logged in twice, it's close enough.
+
+    var length = 0;
+    var total = _.reduce(users, function(sum, el) {
+      if (el.happiness >=0 && el.happiness <= 100) {
+        length++;
+        return sum + el.happiness;
+      }
+      return sum;
+    }, 0);
+
+    var average = total / length;
+
+    onChat('average happiness is now ' + average + '%');
+    ractive.set('happiness', average);
   }
 
   function onMessage(message) {
