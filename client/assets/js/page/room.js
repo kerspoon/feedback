@@ -9,6 +9,12 @@
   var roomId;
   var ractive;
 
+  function sendMessage(message, callback) {
+    jsonPost('room/' + roomId, {
+      message: message
+    }, callback);
+  }
+
   function onMessage() {
 
     var message = ractive.get('message');
@@ -18,9 +24,7 @@
       return false;
     }
 
-    jsonPost('room/' + roomId, {
-      message: message
-    }, function(err) {
+    sendMessage(message, function(err) {
       if (err) {
         alert('failed to send message');
       } else {
@@ -33,13 +37,26 @@
   }
 
   function onConfused() {
-    console.log('onConfused');
+    sendMessage('*confused*', function(err) {
+      if (err) {
+        alert('failed to send message');
+      }
+    });
     // prevent default handler
     return false;
   }
 
   function onHappinessChanged(happiness) {
-    console.log('onHappinessChanged', happiness);
+    if (!happiness) {
+      return false;
+    }
+
+    // we might need to send some form of user ID too.
+    sendMessage('*happiness* ' + happiness, function(err) {
+      if (err) {
+        alert('failed to send message');
+      }
+    });
 
     // prevent default handler
     return false;
@@ -57,9 +74,8 @@
       sendConfused: onConfused
     });
 
-    ractive.observe( 'happiness', function ( newValue ) {
-      _.throttle(_.partial(onHappinessChanged, newValue), 100);
-    });
+    // don't spam the world by sending messages, only send the new value.
+    ractive.observe('happiness', _.debounce(onHappinessChanged, 300));
 
     templates.setTopNav('Welcome to class', true);
   }
