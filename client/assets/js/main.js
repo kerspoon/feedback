@@ -1,7 +1,7 @@
 
 (function (exports) {
   'use strict';
-  /* global templates:false, page:false, index:false, join:false, room:false */
+  /* global templates:false, page:false, index:false, join:false, room:false, host:false */
   /* jshint browser:true */
 
   window.addEventListener('load', function () {

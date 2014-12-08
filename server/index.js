@@ -1,7 +1,6 @@
 'use strict';
 /* jshint node:true */
 
-
 var express = require('express');
 var bodyParser = require('body-parser');
 var helmet = require('helmet');
@@ -19,7 +18,7 @@ var clientDir = path.resolve(__dirname + '/../client');
 
 app.use(helmet());
 
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   console.log("->", req.method, req.path);
   next();
 });
@@ -49,7 +48,7 @@ function stringContains(string, search) {
 
 function isFilePath(path) {
   var parts = path.split('/');
-  return stringContains(parts[parts.length-1], '.');
+  return stringContains(parts[parts.length - 1], '.');
 }
 
 
@@ -59,7 +58,7 @@ function isFilePath(path) {
   the single page app work.
   https://github.com/visionmedia/page.js/blob/master/examples/index.js
 */
-app.use(function(req, res, next){
+app.use(function (req, res, next) {
   if (startsWith(req.path, '/api/') || isFilePath(req.path)) {
     next();
   } else {
@@ -74,14 +73,16 @@ app.use(function(req, res, next){
   other routes defined. Hence we can use this as the 404 handler.
   http://stackoverflow.com/questions/6528876
 */
-app.use(function(req, res, next){
+app.use(function (req, res, next) {
 
   if (startsWith(req.path, '/api/')) {
     console.log("----------");
     console.log("route not found");
     console.log(req.method, req.path);
     console.log("----------");
-    res.json(404, {msg: 'route not found'});
+    res.json(404, {
+      msg: 'route not found'
+    });
   } else {
     res.status(404).sendfile(clientDir + '/404.html');
   }
@@ -97,10 +98,10 @@ app.use(function(req, res, next){
   create their own return message.
   http://expressjs.com/guide.html#error-handling
 */
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
 
   errorCount++;
-  var id = (+ new Date()) + '-' +  errorCount;
+  var id = (+new Date()) + '-' + errorCount;
 
   console.log("----------");
   console.log("error(" + id + ')');
@@ -123,6 +124,6 @@ app.use(function(err, req, res, next) {
 
 });
 
-http.listen(3000, function(){
+http.listen(3000, function () {
   console.log('listening on *:3000', new Date());
 });
