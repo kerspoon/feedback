@@ -36,6 +36,21 @@
     }
   }
 
+  /**
+   * find out how many users have been confused in the last 30 sec.
+   */
+  function recalculateConfusion() {
+    var now = new Date();
+    var total = _.reduce(users, function(sum, el) {
+      if (el.confused && now - el.confused < RECENT_THRESHOLD ) {
+        return sum + 1;
+      }
+      return sum;
+    }, 0);
+    ractive.set('confusion', total);
+    return total;
+  }
+
   function onConfused(userId) {
     if (!users[userId]) {
       users[userId] = {};
@@ -45,17 +60,14 @@
 
     users[userId].confused = now;
 
-    // find out how many users have been confused in the last 30 sec.
-    var total = _.reduce(users, function(sum, el) {
-      if (el.confused && now - el.confused < RECENT_THRESHOLD ) {
-        return sum + 1;
-      }
-      return sum;
-    }, 0);
+    var total = recalculateConfusion();
+    
+    // update the confusion level when this user times out.
+    // (it would be nice to not have this set multiple times for a user it it will work)
+    setTimeout(recalculateConfusion, RECENT_THRESHOLD + 100 );
 
     onChat('recently confused users is ' + total + '.');
-    ractive.set('confusion', total);
-  }
+  }  
 
   function onHappinessChanged(userId, happiness) {
     if (!users[userId]) {
