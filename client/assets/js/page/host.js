@@ -132,6 +132,7 @@
     setInterval(function() {
       ractive.set('timer', getDurationString(start, new Date()));
     }, 1000);
+    
   }
 
 
