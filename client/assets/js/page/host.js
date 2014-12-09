@@ -108,6 +108,10 @@
   }
 
   function onCreated(roomId) {
+    
+    // reset vars
+    messages = [];
+    users = {};
 
     // start the timer
     start = new Date();
