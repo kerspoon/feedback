@@ -13,5 +13,9 @@
     "helmet": "^0.5.2",
     "socket.io": "^1.2.1",
     "underscore": "^1.7.0"
+  },
+  "devDependencies": {
+    "gulp": "^3.8.10",
+    "gulp-sass": "^1.2.4"
   }
 }
